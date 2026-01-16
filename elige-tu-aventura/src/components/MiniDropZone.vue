@@ -1,27 +1,22 @@
 <script setup>
-defineProps({
-  zoneId: String,
-  item: Object // El objeto palabra que está dentro (si hay alguno)
-})
-defineEmits(['drop', 'drag-start'])
+defineProps(['zoneId', 'item']);
+defineEmits(['drop', 'dragStart']);
 </script>
 
 <template>
   <span
-    class="inline-flex items-center justify-center min-w-[100px] h-8 mx-1 border-b-2 border-dashed border-slate-400 bg-slate-100 align-middle transition-colors"
-    :class="{ 'bg-green-100 border-green-500 border-solid': item }"
+    class="inline-flex items-center gap-2 px-3 py-1 rounded border-b-2 transition-colors min-w-[100px] justify-center"
+    :class="item ? 'bg-slate-700 border-amber-500 text-amber-300 cursor-grab' : 'bg-slate-700/30 border-slate-500 border-dashed text-slate-500'"
     @dragover.prevent
     @drop="$emit('drop', zoneId)"
+    @dragstart="item && $emit('dragStart', item.id)"
+    :draggable="!!item"
   >
-    <span
-      v-if="item"
-      class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded cursor-grab active:cursor-grabbing"
-      draggable="true"
-      @dragstart="$emit('drag-start', item.id)"
-    >
-      {{ item.label }}
-    </span>
+    <template v-if="item">
+        <i :class="[item.icon, item.iconColor]"></i>
+        {{ item.label }}
+    </template>
     
-    <span v-else class="text-xs text-slate-400 select-none">arrastra aquí</span>
+    <template v-else>...</template>
   </span>
 </template>
